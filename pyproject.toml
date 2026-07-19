@@ -1,51 +1,34 @@
-[project]
-name = "py-sapient-proto"
-version = "2.0.0"
-description = "SAPIENT (BSI Flex 335 v2.0) protobuf message classes for Python, with type stubs"
-readme = "README.md"
-license = { file = "LICENSE" }
-requires-python = ">=3.9"
-authors = [{ name = "Konstantin Afanasyev" }]
-keywords = ["sapient", "protobuf", "bsi-flex-335", "dstl"]
-classifiers = [
-    "Development Status :: 5 - Production/Stable",
-    "Intended Audience :: Developers",
-    "License :: OSI Approved :: Apache Software License",
-    "Operating System :: OS Independent",
-    "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.9",
-    "Programming Language :: Python :: 3.10",
-    "Programming Language :: Python :: 3.11",
-    "Programming Language :: Python :: 3.12",
-    "Programming Language :: Python :: 3.13",
-    "Typing :: Typed",
-]
-dependencies = ["protobuf>=6.33,<7"]
-
-[project.urls]
-Homepage = "https://github.com/cafanasyev/py-sapient-proto"
-Source = "https://github.com/cafanasyev/py-sapient-proto"
-Issues = "https://github.com/cafanasyev/py-sapient-proto/issues"
+[tool.uv.workspace]
+members = ["packages/*"]
 
 [dependency-groups]
 dev = [
     "grpcio-tools>=1.73",
-    "mypy-protobuf>=3.6",
     "mypy>=1.16",
     "pytest>=8",
     "pytest-xdist>=3",
+    "ruff>=0.5",
+    "types-protobuf>=6",
 ]
-
-[build-system]
-requires = ["hatchling"]
-build-backend = "hatchling.build"
-
-[tool.hatch.build.targets.wheel]
-packages = ["src/sapient_msg"]
-
-[tool.hatch.build.targets.sdist]
-include = ["src", "proto", "scripts", "tests", "Makefile", "README.md", "LICENSE", "third-party-licenses"]
 
 [tool.pytest.ini_options]
 addopts = "-n auto"
-testpaths = ["tests"]
+testpaths = [
+    "packages/cafanasyev-sapient-proto/tests",
+    "packages/cafanasyev-sapient-pydantic/tests",
+]
+
+[tool.mypy]
+strict = true
+files = [
+    "packages/cafanasyev-sapient-pydantic/src",
+    "packages/cafanasyev-sapient-pydantic/tests",
+    "packages/cafanasyev-sapient-proto/tests",
+]
+
+[tool.ruff]
+target-version = "py310"
+extend-exclude = ["packages/cafanasyev-sapient-proto/src", "external"]
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "UP", "B"]
